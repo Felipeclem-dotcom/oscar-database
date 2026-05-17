@@ -1,4 +1,4 @@
-#Oscar - Exercícios SQL
+Oscar - Exercícios SQL
 
 Bem-vindo à base de dados do Oscar!
 
