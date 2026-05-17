@@ -1,269 +1,630 @@
-Oscar - Exercícios SQL
+# Oscar - Exercícios SQL
 
 Bem-vindo à base de dados do Oscar!
 
 O Oscar é a premiação mais prestigiada do cinema mundial, realizada anualmente desde 1929 pela Academia de Artes e Ciências Cinematográficas. Nesta base de dados, você encontrará registros históricos de indicados e vencedores de diversas categorias ao longo de quase 100 anos de história do cinema.
 
 Nestes exercícios, você vai explorar o banco de dados SQL do Oscar e responder perguntas que revelam insights fascinantes sobre a história do cinema, tendências de premiação, e momentos marcantes da indústria cinematográfica.
-Avaliação
 
-    Nível 1-4: Operações básicas e queries simples
-    Nível 5-8: Agregações e análise de dados
-    Nível 9-11: Queries complexas e pensamento analítico
-    Nível 12-14: Expertise avançada e pensamento estratégico
+---
+
+# Avaliação
+
+* Nível 1-4: Operações básicas e queries simples
+* Nível 5-8: Agregações e análise de dados
+* Nível 9-11: Queries complexas e pensamento analítico
+* Nível 12-14: Expertise avançada e pensamento estratégico
 
 Objetivo de aprendizado: Ao completar todos os níveis, você será capaz de trabalhar com bases de dados históricas complexas, realizar análises estatísticas sofisticadas e extrair insights valiosos de grandes volumes de dados.
-Nível 1: Primeiros Passos
-Conhecendo a Base de Dados
 
-1.1 Quantos registros existem na tabela de indicados ao Oscar?
+---
 
-Exemplo de resposta:
+# Nível 1: Primeiros Passos
 
-R: 1430 registros
+## Conhecendo a Base de Dados
 
-SELECT COUNT(*) FROM oscar_indicados;
+### 1.1 Quantos registros existem na tabela de indicados ao Oscar?
 
-1.2.1 Quais são as diferentes categorias de premiação que existem no banco de dados? Liste todas as categorias únicas.
+**R:** 11134 registros
 
-Exemplo de resposta:
+```sql
+SELECT COUNT(*) FROM indicados_ao_oscar;
+```
 
-R:
+---
 
-ACTOR IN A LEADING ROLE
-ACTOR IN A SUPPORTING ROLE
-...
+### 1.2.1 Quais são as diferentes categorias de premiação que existem no banco de dados? Liste todas as categorias únicas.
 
-SELECT DISTINCT categoria FROM oscar_indicados;
+**R:** Lista de categorias retornadas pela query.
 
-1.2.2 Quantas categorias únicas existem?
+```sql
+SELECT DISTINCT categoria FROM indicados_ao_oscar;
+```
 
-R: 92 registros
+---
 
-Exemplo de resposta:
+### 1.2.2 Quantas categorias únicas existem?
 
-SELECT COUNT(DISTINCT categoria) FROM oscar_indicados;
+**R:** 121 categorias
 
-1.3 Qual foi o primeiro ano de cerimônia do Oscar registrado na base?
+```sql
+SELECT categoria, COUNT(*) 
+FROM indicados_ao_oscar 
+GROUP BY categoria 
+ORDER BY COUNT(*);
+```
 
-1.4 Qual foi o último ano de cerimônia registrado na base?
+---
 
-1.5 Quantas cerimônias do Oscar estão registradas no total?
+### 1.3 Qual foi o primeiro ano de cerimônia do Oscar registrado na base?
 
-1.6 Atualize os registros da tabela com os dados do Oscar 2025 e 2026 (pesquise os vencedores e adicione-os).
-Nível 2: Explorando Categorias
+**R:** A primeira cerimônia foi em 1928
 
-2.1 Quantas indicações existem para cada categoria? Agrupe por categoria e ordene da mais frequente para a menos frequente.
+```sql
+SELECT ano_cerimonia 
+FROM indicados_ao_oscar 
+ORDER BY ano_cerimonia 
+LIMIT 1;
+```
 
-2.2 Qual categoria teve mais indicações ao longo da história do Oscar?
+---
 
-2.3 Qual categoria teve menos indicações ao longo da história?
+### 1.4 Qual foi o último ano de cerimônia registrado na base?
 
-2.4 A partir de que ano a categoria "ACTRESS" deixou de existir? (Dica: procure a última cerimônia com essa categoria)
+**R:** A última cerimônia foi em 2026
 
-2.5 Quais categorias existiam na primeira cerimônia (1928) e não existem mais hoje?
+```sql
+SELECT DISTINCT ano_cerimonia 
+FROM indicados_ao_oscar 
+ORDER BY ano_cerimonia DESC 
+LIMIT 1;
+```
 
-2.6 Liste todas as categorias que contêm a palavra "DIRECTING" no nome.
-Nível 3: Atores e Atrizes Famosos
-Natalie Portman
+---
 
-3.1 Quantas vezes Natalie Portman foi indicada ao Oscar?
+### 1.5 Quantas cerimônias do Oscar estão registradas no total?
 
-3.2 Quantos Oscars Natalie Portman ganhou?
+**R:** São 98 cerimônias registradas no total
 
-3.3 Em quais anos e por quais filmes Natalie Portman foi indicada?
+```sql
+SELECT COUNT(DISTINCT ano_cerimonia) 
+FROM indicados_ao_oscar;
+```
 
-3.4 Liste todas as indicações de Natalie Portman mostrando: ano, categoria, filme e se venceu.
-Viola Davis
+---
 
-3.5 Quantas vezes Viola Davis foi indicada ao Oscar?
+### 1.6 Atualize os registros da tabela com os dados do Oscar 2025 e 2026.
 
-R: 4
+**R:** Adicionado
 
-SELECT COUNT(*) FROM indicados_ao_oscar
-WHERE nome_indicado LIKE "%Viola Davis%"
+---
 
-3.6 Quantos Oscars Viola Davis ganhou?
+# Nível 2: Explorando Categorias
 
-R: 1
+### 2.1 Quantas indicações existem para cada categoria? Agrupe por categoria e ordene da mais frequente para a menos frequente.
 
-SELECT COUNT(*) FROM indicados_ao_oscar
-WHERE nome_indicado LIKE "%Viola Davis%"
-AND 
-vencedor = true;
+**R:** Do menos frequente até o mais frequente
 
-3.7 Por quais filmes Viola Davis foi indicada?
-Amy Adams
+```sql
+SELECT categoria, COUNT(*) AS total_indicacoes 
+FROM indicados_ao_oscar 
+GROUP BY categoria 
+ORDER BY total_indicacoes DESC;
+```
 
-3.8 Amy Adams já ganhou algum Oscar?
+---
 
-3.9 Quantas vezes Amy Adams foi indicada sem ganhar?
-Denzel Washington
+### 2.2 Qual categoria teve mais indicações ao longo da história do Oscar?
 
-3.10 Denzel Washington já ganhou algum Oscar?
+**R:** DIRECTING com 469 indicações
 
-3.11 Quantas vezes Denzel Washington foi indicado ao Oscar?
+```sql
+SELECT categoria, COUNT(*) AS total_indicacoes 
+FROM indicados_ao_oscar 
+GROUP BY categoria 
+ORDER BY total_indicacoes DESC 
+LIMIT 1;
+```
 
-3.12 Liste todos os Oscars que Denzel Washington ganhou (ano, categoria, filme).
-Nível 4: Vencedores Históricos
+---
 
-4.1 Quem ganhou o primeiro Oscar para Melhor Atriz (ACTRESS)? Em que ano e por qual filme?
+### 2.3 Qual categoria teve menos indicações ao longo da história?
 
-4.2 Quem ganhou o primeiro Oscar para Melhor Ator (ACTOR)? Em que ano e por qual filme?
+**R:** SPECIAL ACHIEVEMENT AWARD (Sound Effects)
 
-4.3 Quantos vencedores existem ao todo na base de dados?
+```sql
+SELECT categoria, COUNT(*) AS total_indicacoes 
+FROM indicados_ao_oscar 
+GROUP BY categoria 
+ORDER BY total_indicacoes 
+LIMIT 1;
+```
 
-4.4 Liste todos os filmes que ganharam o Oscar de Melhor Filme (categoria "OUTSTANDING PICTURE" ou "BEST PICTURE").
+---
 
-4.5 Quantos filmes diferentes já ganharam o Oscar?
-Nível 5: Análise de Indicações
+### 2.4 A partir de que ano a categoria "ACTRESS" deixou de existir?
 
-5.1 Quais atores/atrizes foram indicados mais de uma vez? Liste o nome e o número de indicações.
+**R:** A partir do ano de 1977
 
-5.2 Qual ator ou atriz tem o maior número de indicações na história do Oscar?
+```sql
+SELECT categoria, ano_cerimonia 
+FROM indicados_ao_oscar 
+WHERE categoria = 'ACTRESS' 
+ORDER BY ano_cerimonia DESC 
+LIMIT 1;
+```
 
-5.3 Quais atores foram indicados mais de 3 vezes, mas nunca ganharam?
+---
 
-5.4 Encontre todos os artistas que foram indicados em categorias diferentes (ex: ator e diretor).
+### 2.5 Quais categorias existiam na primeira cerimônia (1928) e não existem mais hoje?
 
-5.5 Quantos indicados têm exatamente 1 indicação na história?
+**R:** ...
 
-5.6 Qual o maior números de indicados em um único ano? Essa é uma pergunta franca.
-Nível 6: Análise de Filmes
-Toy Story
+```sql
+SELECT DISTINCT c1.categoria
+FROM indicados_ao_oscar c1
+WHERE c1.edicao_cerimonia = 1
+  AND c1.categoria NOT IN (
+    SELECT DISTINCT c2.categoria
+    FROM indicados_ao_oscar c2
+    WHERE c2.edicao_cerimonia = (
+      SELECT MAX(edicao_cerimonia)
+      FROM indicados_ao_oscar
+    )
+  )
+ORDER BY c1.categoria;
+```
 
-6.1 A série de filmes Toy Story ganhou Oscars em quais anos?
+---
 
-6.2 Quantas indicações a franquia Toy Story recebeu no total?
+### 2.6 Liste todas as categorias que contêm a palavra "DIRECTING" no nome.
 
-6.3 Em quais categorias os filmes Toy Story foram indicados?
-Crash
+**R:** DIRECTING, DIRECTING (Comedy Picture), DIRECTING (Dramatic Picture)
 
-6.4 Em qual edição do Oscar o filme "Crash" concorreu?
+```sql
+SELECT DISTINCT categoria 
+FROM indicados_ao_oscar 
+WHERE categoria LIKE '%DIRECTING%';
+```
 
-6.5 Quantas indicações o filme "Crash" recebeu?
+---
 
-6.6 "Crash" ganhou o Oscar de Melhor Filme?
-Central do Brasil
+# Nível 3: Atores e Atrizes Famosos
 
-6.7 O filme "Central do Brasil" aparece no banco de dados?
+## Natalie Portman
 
-6.8 Se sim, quantas indicações "Central do Brasil" recebeu?
-Nível 7: Operações de Atualização
+### 3.1 Quantas vezes Natalie Portman foi indicada ao Oscar?
 
-7.1 No campo "vencedor", altere todos os valores "true" (string) para true (booleano) e "false" (string) para false (booleano).
+**R:** 3 vezes
 
-7.2 Inclua no banco 3 filmes que nunca foram nomeados ao Oscar, mas que você acha que merecem. Use dados fictícios, mas realistas.
+```sql
+SELECT COUNT(*) nome_indicado 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Natalie Portman%';
+```
 
-7.3 Adicione uma nova categoria chamada "BEST INTERNATIONAL FEATURE FILM" com alguns vencedores recentes (2020-2024).
+---
 
-7.4 Corrija possíveis erros de digitação nos nomes dos filmes (ex: espaços extras, caracteres especiais desnecessários).
+### 3.2 Quantos Oscars Natalie Portman ganhou?
 
-7.5 Remova todos os registros com valor NULL no campo nome_do_filme.
-Nível 8: Análise Temporal
+**R:** Ela ganhou 1 vez
 
-8.1 Quantas indicações aconteceram por década? Agrupe por década (1920s, 1930s, etc.) e mostre o total.
+```sql
+SELECT nome_indicado, vencedor 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Natalie Portman%' 
+AND vencedor = 1;
+```
 
-8.2 Em qual década houve o maior número de indicações?
+---
 
-8.3 Como o número de categorias evoluiu ao longo dos anos? Mostre quantas categorias únicas existiam a cada década.
+### 3.3 Em quais anos e por quais filmes Natalie Portman foi indicada?
 
-8.4 Qual foi o ano com o maior número de indicações registradas?
+**R:** 2004, 2010 e 2016
 
-8.5 Calcule a taxa de crescimento de indicações comparando a primeira década com a última.
-Nível 9: Questões Históricas e Sociais
-Representatividade
+```sql
+SELECT nome_indicado, vencedor, ano_filmagem 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Natalie Portman%';
+```
 
-9.1 Sidney Poitier foi o primeiro ator negro a ser indicado ao Oscar. Em que ano ele foi indicado? Por qual filme?
+---
 
-9.2 Sidney Poitier ganhou o Oscar nessa indicação?
+### 3.4 Liste todas as indicações de Natalie Portman mostrando: ano, categoria, filme e se venceu.
 
-9.3 Quantos atores/atrizes negros foram indicados na categoria ACTOR ou ACTRESS antes de 1970?
+**R:** nome, ano, categoria, filme, venceu?
 
-9.4 Liste todos os filmes dirigidos por mulheres que ganharam algum Oscar.
-Coincidências
+```sql
+SELECT nome_indicado, ano_cerimonia, categoria, nome_filme, vencedor 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Natalie Portman%';
+```
 
-9.5 Denzel Washington e Jamie Foxx já concorreram ao Oscar no mesmo ano?
+---
 
-9.6 Se sim, em qual ano e quem ganhou?
+## Viola Davis
 
-9.7 Encontre casos onde o mesmo filme ganhou Oscar em múltiplas categorias na mesma cerimônia. Mostre o nome do filme e quantas categorias ele venceu.
-Nível 10: Análise Avançada
+### 3.5 Quantas vezes Viola Davis foi indicada ao Oscar?
 
-10.1 Quais filmes ganharam o Oscar de Melhor Filme ("OUTSTANDING PICTURE" ou "BEST PICTURE") e Melhor Diretor na mesma cerimônia?
+**R:** 4 vezes
 
-10.2 Qual filme recebeu o maior número de indicações em uma única cerimônia?
+```sql
+SELECT COUNT(*) nome_indicado 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Viola Davis%';
+```
 
-10.3 Qual filme teve a maior taxa de conversão (porcentagem de indicações que viraram vitórias)?
+---
 
-10.4 Encontre atores que foram indicados em anos consecutivos. Liste o nome e os anos.
+### 3.6 Quantos Oscars Viola Davis ganhou?
 
-10.5 Qual a média de indicações por cerimônia ao longo da história?
+**R:** Ela ganhou 1 vez
 
-10.6 Identifique "surpresas" - indicados em categorias principais (ACTOR, ACTRESS, BEST PICTURE) cujo filme só teve uma indicação.
-Nível 11: Desafios Complexos
+```sql
+SELECT nome_indicado, vencedor 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Viola Davis%';
+```
 
-11.1 Crie um ranking dos 10 filmes mais premiados da história (que ganharam mais Oscars).
+---
 
-11.2 Crie um ranking dos 10 artistas (atores/diretores) mais indicados da história, independente da categoria.
+### 3.7 Por quais filmes Viola Davis foi indicada?
 
-11.3 Encontre "azarões" - artistas com mais de 5 indicações e 0 vitórias.
+**R:** Doubt, The Help, Fences e Ma Rainey's Black Bottom
 
-11.4 Qual categoria tem a maior concentração de vitórias (menos vencedores diferentes ao longo do tempo)?
+```sql
+SELECT nome_indicado, nome_filme 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Viola Davis%';
+```
 
-11.5 Calcule a "competitividade" de cada categoria (média de indicados por cerimônia).
+---
 
-11.6 Encontre filmes que foram indicados em uma categoria em um ano e ganharam em outra categoria em outro ano.
-Nível 12: Casos Práticos
-Cenário 1: Curadoria de Mostra de Cinema
+## Amy Adams
 
-Você está organizando uma mostra de cinema e precisa selecionar filmes.
+### 3.8 Amy Adams já ganhou algum Oscar?
 
-12.1 Liste os 20 filmes mais premiados do Oscar para sua mostra.
+**R:** Ela não ganhou nenhum oscar
 
-12.2 Selecione 5 filmes de cada década (1930s até 2020s) que ganharam pelo menos um Oscar.
+```sql
+SELECT nome_indicado, vencedor 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Amy Adams%' 
+AND vencedor = 1;
+```
 
-12.3 Crie uma lista de "clássicos esquecidos" - filmes que ganharam Oscars, mas são de mais de 50 anos atrás.
-Cenário 2: Análise para Documentário
+---
 
-Você está produzindo um documentário sobre a história do Oscar.
+### 3.9 Quantas vezes Amy Adams foi indicada sem ganhar?
 
-12.4 Identifique os 5 momentos mais importantes (cerimônias com mais premiações históricas).
+**R:** Ela foi indicada 6 vezes
 
-12.5 Liste todos os "primeiros" históricos (primeira mulher a ganhar melhor direção, primeiro ator negro, etc.) - use sua criatividade para encontrar esses marcos.
+```sql
+SELECT COUNT(*) nome_indicado 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Amy Adams%' 
+AND vencedor = 0;
+```
 
-12.6 Encontre casos de "injustiça" - filmes/atores muito indicados, mas que nunca ganharam.
-Cenário 3: Estatísticas para Apostas
+---
 
-Você trabalha para um site de apostas e precisa de estatísticas.
+## Denzel Washington
 
-12.7 Qual a probabilidade histórica de um filme indicado em 10 categorias ganhar Melhor Filme?
+### 3.10 Denzel Washington já ganhou algum Oscar?
 
-12.8 Atores que ganharam Melhor Ator tendem a ter quantas indicações antes da primeira vitória?
+**R:** Ele ganhou 2 vezes
 
-12.9 Qual categoria tem os vencedores mais "previsíveis" (mesmo artista/filme ganha múltiplas vezes)?
-Nível 13: Queries Criativas
+```sql
+SELECT nome_indicado, vencedor 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Denzel Washington%' 
+AND vencedor = 1;
+```
 
-13.1 Encontre todos os filmes cujo nome começa com "The" e ganharam pelo menos um Oscar.
+---
 
-13.2 Liste todos os indicados cujo nome contém um sobrenome composto (ex: "Mary-Louise Parker").
+### 3.11 Quantas vezes Denzel Washington foi indicado ao Oscar?
 
-13.3 Encontre todas as cerimônias onde houve empate (múltiplos vencedores na mesma categoria no mesmo ano).
+**R:** Ele foi indicado 10 vezes
 
-13.4 Crie uma query que simule uma "loteria" - selecione 5 filmes aleatórios que ganharam Melhor Filme.
+```sql
+SELECT COUNT(*) nome_indicado 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Denzel Washington%';
+```
 
-13.5 Encontre padrões nos nomes dos filmes vencedores (ex: quantos têm uma palavra só, duas palavras, etc.).
-Desafio Final: Dashboard Completo
+---
 
-14.1 Crie UMA ÚNICA query de agregação que retorne um dashboard executivo com:
+### 3.12 Liste todos os Oscars que Denzel Washington ganhou (ano, categoria, filme).
 
-    Total de indicações
-    Total de cerimônias
-    Total de vencedores
-    Categoria com mais indicações
-    Filme mais premiado
-    Ator/atriz mais indicado(a)
-    Década com mais premiações
-    Número de categorias únicas
+**R:** nome, ano, categoria, filme, venceu
 
-Bons estudos! 🏆
+```sql
+SELECT nome_indicado, ano_cerimonia, categoria, nome_filme, vencedor 
+FROM indicados_ao_oscar 
+WHERE nome_indicado LIKE '%Denzel Washington%' 
+AND vencedor = '1';
+```
+
+---
+
+# Nível 4: Vencedores Históricos
+
+### 4.1 Quem ganhou o primeiro Oscar para Melhor Atriz (ACTRESS)? Em que ano e por qual filme?
+
+**R:** Louise Dresser em 1927 pelo filme A Ship Comes In
+
+```sql
+SELECT DISTINCT nome_indicado,categoria, ano_filmagem, nome_filme 
+FROM indicados_ao_oscar 
+WHERE categoria LIKE '%ACTRESS%' 
+LIMIT 1;
+```
+
+---
+
+### 4.2 Quem ganhou o primeiro Oscar para Melhor Ator (ACTOR)? Em que ano e por qual filme?
+
+**R:** Richard Barthelmess em 1927 pelo filme The Noose
+
+```sql
+SELECT DISTINCT nome_indicado, categoria, ano_filmagem, nome_filme 
+FROM indicados_ao_oscar 
+WHERE categoria LIKE '%ACTOR%' 
+LIMIT 1;
+```
+
+---
+
+### 4.3 Quantos vencedores existem ao todo na base de dados?
+
+**R:** 2513
+
+```sql
+SELECT COUNT(*) nome_indicado 
+FROM indicados_ao_oscar 
+WHERE vencedor = 1;
+```
+
+---
+
+### 4.4 Liste todos os filmes que ganharam o Oscar de Melhor Filme.
+
+**R:** Tá listado
+
+```sql
+SELECT DISTINCT nome_filme, categoria, vencedor 
+FROM indicados_ao_oscar 
+WHERE vencedor = 1 
+AND categoria IN ('OUTSTANDING PICTURE', 'BEST PICTURE');
+```
+
+---
+
+### 4.5 Quantos filmes diferentes já ganharam o Oscar?
+
+**R:** 2513
+
+```sql
+SELECT DISTINCT COUNT(*) vencedor 
+FROM indicados_ao_oscar 
+WHERE vencedor = 1;
+```
+
+---
+
+# Nível 5: Análise de Indicações
+
+### 5.1 Quais atores/atrizes foram indicados mais de uma vez?
+
+**R:** Timothée Chalamet
+
+```sql
+SELECT 
+    nome_indicado,
+    COUNT(*) AS total_indicacoes
+FROM indicados_ao_oscar
+WHERE categoria IN (
+    'BEST ACTOR',
+    'BEST ACTRESS',
+    'BEST SUPPORTING ACTOR',
+    'BEST SUPPORTING ACTRESS'
+)
+GROUP BY nome_indicado
+HAVING COUNT(*) > 1
+ORDER BY total_indicacoes DESC, nome_indicado;
+```
+
+---
+
+### 5.2 Qual ator ou atriz tem o maior número de indicações na história do Oscar?
+
+**R:** Meryl Streep 21 indicações
+
+```sql
+SELECT nome_indicado, COUNT(*) AS total_categoria 
+FROM indicados_ao_oscar 
+WHERE categoria LIKE '%ACTRESS%' 
+OR categoria LIKE '%ACTOR%' 
+GROUP BY nome_indicado 
+ORDER BY total_categoria DESC 
+LIMIT 1;
+```
+
+---
+
+### 5.3 Quais atores foram indicados mais de 3 vezes, mas nunca ganharam?
+
+**R:** ...
+
+```sql
+SELECT 
+    nome_indicado,
+    COUNT(*) AS total_indicacoes,
+    SUM(CASE WHEN vencedor = TRUE THEN 1 ELSE 0 END) AS total_vitorias
+FROM indicados_ao_oscar
+WHERE nome_indicado IS NOT NULL
+  AND categoria LIKE '%ACTOR%'
+GROUP BY nome_indicado
+HAVING COUNT(*) > 3
+   AND SUM(CASE WHEN vencedor = TRUE THEN 1 ELSE 0 END) = 0;
+```
+
+---
+
+### 5.4 Encontre todos os artistas que foram indicados em categorias diferentes.
+
+**R:** ...
+
+```sql
+SELECT 
+    nome_indicado,
+    COUNT(DISTINCT categoria) AS total_categorias
+FROM indicados_ao_oscar
+WHERE nome_indicado IS NOT NULL
+GROUP BY nome_indicado
+HAVING COUNT(DISTINCT categoria) > 1
+ORDER BY total_categorias DESC, nome_indicado;
+```
+
+---
+
+### 5.5 Quantos indicados têm exatamente 1 indicação na história?
+
+**R:** 5670...
+
+```sql
+SELECT COUNT(*) AS total_pessoas_com_1_indicacao
+FROM (
+    SELECT nome_indicado
+    FROM indicados_ao_oscar
+    WHERE nome_indicado IS NOT NULL
+    GROUP BY nome_indicado
+    HAVING COUNT(*) = 1
+) AS sub;
+```
+
+---
+
+### 5.6 Qual o maior números de indicados em um único ano?
+
+**R:** ...
+
+```sql
+SELECT 
+    edicao_cerimonia,
+    ano_cerimonia,
+    COUNT(*) AS total_indicados
+FROM indicados_ao_oscar
+GROUP BY edicao_cerimonia, ano_cerimonia
+ORDER BY total_indicados DESC
+LIMIT 1;
+```
+
+---
+
+# Nível 6: Análise de Filmes
+
+## Toy Story
+
+### 6.1 A série de filmes Toy Story ganhou Oscars em quais anos?
+
+**R:** Ganhou em 2011 duas vezes ganhou novamente em 2020
+
+```sql
+SELECT nome_filme, ano_cerimonia, categoria 
+FROM indicados_ao_oscar 
+WHERE vencedor = 1 
+AND nome_filme LIKE '%Toy Story%';
+```
+
+---
+
+### 6.2 Quantas indicações a franquia Toy Story recebeu no total?
+
+**R:** 11 indicações
+
+```sql
+SELECT COUNT(*) 
+FROM indicados_ao_oscar 
+WHERE nome_filme LIKE '%Toy Story%';
+```
+
+---
+
+### 6.3 Em quais categorias os filmes Toy Story foram indicados?
+
+**R:** MUSIC (Original Musical or Comedy Score), MUSIC (Original Song), WRITING (Screenplay Written Directly for the Screen), MUSIC (Original Song), ANIMATED FEATURE FILM, MUSIC (Original Song), BEST PICTURE, SOUND EDITING, WRITING (Adapted Screenplay), ANIMATED FEATURE FILM, MUSIC (Original Song)
+
+```sql
+SELECT DISTINCT nome_filme, categoria 
+FROM indicados_ao_oscar 
+WHERE nome_filme LIKE '%Toy Story%';
+```
+
+---
+
+## Crash
+
+### 6.4 Em qual edição do Oscar o filme "Crash" concorreu?
+
+**R:** Crash concorreu na edição 78
+
+```sql
+SELECT nome_filme, edicao_cerimonia 
+FROM indicados_ao_oscar 
+WHERE nome_filme = 'Crash';
+```
+
+---
+
+### 6.5 Quantas indicações o filme "Crash" recebeu?
+
+**R:** Crash recebeu 6 indicações
+
+```sql
+SELECT COUNT(*) 
+FROM indicados_ao_oscar 
+WHERE nome_filme = 'Crash';
+```
+
+---
+
+### 6.6 "Crash" ganhou o Oscar de Melhor Filme?
+
+**R:** Crash ganhou 1 vez como melhor filme e outras 2 vezes em outras categorias
+
+```sql
+SELECT nome_filme, categoria, vencedor 
+FROM indicados_ao_oscar 
+WHERE nome_filme = 'Crash' 
+AND vencedor = 1;
+```
+
+---
+
+## Central do Brasil
+
+### 6.7 O filme "Central do Brasil" aparece no banco de dados?
+
+**R:** Não aparece
+
+```sql
+SELECT nome_filme 
+FROM indicados_ao_oscar 
+WHERE nome_filme LIKE 'Central do Brasil';
+```
+
+---
+
+### 6.8 Se sim, quantas indicações "Central do Brasil" recebeu?
+
+**R:** Não aparece
+
+```sql
+SELECT COUNT(*) 
+FROM indicados_ao_oscar 
+WHERE nome_filme LIKE 'Central do Brasil';
+```
+
+---
